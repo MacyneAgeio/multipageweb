@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lost & Found Blog</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <h1>Welcome to the Blog Page</h1>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/blog">Blog</a>
+    </nav>
+    
+    <div id="blog-container">
+        <p>Loading updates...</p>
+    </div>
+
+    <script>
+        async function fetchBlogs() {
+            try {
+                
+                const response = await fetch('/api/blogs'); 
+                const blogs = await response.json();
+
+                const container = document.getElementById('blog-container');
+                container.innerHTML = '';
+
+                blogs.forEach(post => {
+                    const postElement = document.createElement('div');
+                    postElement.className = 'blog-post';
+                    postElement.innerHTML = `
+                        <h3>${post.title}</h3>
+                        <p>${post.content}</p>
+                        <small>Posted on: ${post.date}</small>
+                        <hr>
+                    `;
+                    container.appendChild(postElement);
+                });
+            } catch (error) {
+                console.error('Error fetching blog data:', error);
+                document.getElementById('blog-container').innerHTML = 'Failed to load updates.';
+            }
+        }
+
+        fetchBlogs();
+    </script>
+</body>
+</html>
