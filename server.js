@@ -22,20 +22,17 @@ app.get('/blog', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'blog.html'));
 });
 
+const fs = require('fs');
 app.get('/api/blogs', (req, res) => {
-    const blogData = [
-        { 
-            title: "Found: Blue Keys", 
-            content: "Found near the University Gym. Please contact the admin office.", 
-            date: "2026-02-13" 
-        },
-        { 
-            title: "Lost: Engineering Calculator", 
-            content: "Left in Room 302. It has a 'JR' sticker on the back.", 
-            date: "2026-02-12" 
+    const filePath = path.join(__dirname, 'data', 'posts.json');
+
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error("Could not read file:", err);
+            return res.status(500).send("Error reading blog data");
         }
-    ];
-    res.json(blogData);
+        res.json(JSON.parse(data));
+    });
 });
 
 app.listen(PORT, () => {
